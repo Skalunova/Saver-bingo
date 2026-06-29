@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0c302f">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Кубышка">
+<link rel="manifest" href='data:application/json,{"name":"Кубышка — бинго","short_name":"Кубышка","start_url":".","display":"standalone","background_color":"%230c302f","theme_color":"%230c302f","icons":[]}'>
+<title>Кубышка — бинго</title>
+<style>
+  :root{
+    --ink:#0c302f;        /* harbour deep teal */
+    --ink-2:#103e3c;
+    --paper:#f3ede0;      /* warm sand */
+    --paper-dim:#d8cfbd;
+    --gold:#d8a23a;       /* the reward */
+    --gold-deep:#b07f23;
+    --slate:#1a4a48;      /* cell rest */
+    --slate-line:#2c5e5b;
+    --text-soft:#bcd1cf;
+    --free:#1f5350;
+    --bad:#c66a4f;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(120% 80% at 50% -10%, #134644 0%, var(--ink) 55%, #08221f 100%);
+    color:var(--paper);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    min-height:100vh;
+    padding:env(safe-area-inset-top) 14px calc(env(safe-area-inset-bottom) + 24px);
+    line-height:1.45;
+  }
+  .wrap{max-width:520px;margin:0 auto;}
+
+  header{padding:22px 2px 8px;}
+  .eyebrow{
+    font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin-bottom:6px;
+  }
+  h1{
+    font-family:Georgia,"Times New Roman",serif;
+    font-weight:600;font-size:30px;line-height:1.05;margin:0;
+    letter-spacing:-.01em;
+  }
+  h1 .sub{display:block;font-size:14px;font-style:italic;font-weight:400;
+    color:var(--text-soft);letter-spacing:0;margin-top:7px;}
+
+  /* Bank */
+  .bank{
+    margin:18px 0 14px;background:var(--ink-2);
+    border:1px solid var(--slate-line);border-radius:18px;
+    padding:18px 18px 16px;position:relative;overflow:hidden;
+  }
+  .bank::after{content:"";position:absolute;right:-30px;top:-30px;width:120px;height:120px;
+    background:radial-gradient(circle,rgba(216,162,58,.18),transparent 70%);}
+  .bank .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-soft);}
+  .bank .amount{font-family:Georgia,serif;font-size:42px;font-weight:600;letter-spacing:-.02em;margin:2px 0 0;}
+  .bank .amount .cur{font-size:22px;color:var(--gold);}
+  .bank .eur{font-size:13px;color:var(--text-soft);margin-top:2px;}
+  .bank .meta{font-size:12px;color:var(--text-soft);margin-top:10px;}
+  .bank .meta b{color:var(--gold);font-weight:600;}
+
+  /* Add controls */
+  .add{display:flex;gap:8px;margin:0 0 6px;flex-wrap:wrap;}
+  .add input{
+    font-size:16px;color:var(--paper);background:var(--ink-2);
+    border:1px solid var(--slate-line);border-radius:12px;padding:12px 13px;
+    font-family:inherit;
+  }
+  .add input#amt{width:118px;font-variant-numeric:tabular-nums;}
+  .add input#note{flex:1;min-width:140px;}
+  .add input::placeholder{color:#6f8c8a;}
+  .add button{
+    background:var(--gold);color:#3a2700;border:none;border-radius:12px;
+    padding:12px 16px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;
+    letter-spacing:.01em;
+  }
+  .add button:active{transform:translateY(1px);}
+  .hint{font-size:12px;color:var(--text-soft);margin:2px 2px 16px;}
+
+  /* Bingo grid */
+  .grid{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:7px;
+  }
+  .cell{
+    position:relative;aspect-ratio:1/1;border-radius:13px;
+    background:var(--slate);border:1px solid var(--slate-line);
+    color:var(--paper);padding:6px 5px 5px;cursor:pointer;
+    display:flex;flex-direction:column;justify-content:space-between;
+    overflow:hidden;transition:transform .12s ease, background .2s ease;
+    text-align:left;
+  }
+  .cell:active{transform:scale(.96);}
+  .cell .nm{font-size:10.5px;line-height:1.18;font-weight:500;
+    display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+  .cell .pr{font-size:10px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;
+    align-self:flex-start;}
+  .cell.free .pr{color:#7fd0c9;}
+  .cell.free{background:var(--free);}
+  .cell.locked{opacity:.45;}
+  .cell.locked .pr{color:#c9b27a;}
+  .cell.claimed{
+    background:linear-gradient(160deg,var(--gold) 0%,var(--gold-deep) 100%);
+    border-color:var(--gold-deep);color:#3a2700;
+  }
+  .cell.claimed .nm{color:#3a2700;font-weight:600;}
+  .cell.claimed .pr{color:#5c3f00;}
+  .cell .check{position:absolute;right:6px;top:5px;font-size:13px;opacity:0;font-weight:800;}
+  .cell.claimed .check{opacity:1;}
+  .cell.center{background:#14403d;}
+  .cell.center.claimed{background:linear-gradient(160deg,#e9c66a,var(--gold-deep));}
+  .cell.center .star{font-size:22px;align-self:center;margin:auto;}
+  .cell.center .nm{text-align:center;font-size:9px;}
+
+  /* toast */
+  #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(40px);
+    background:var(--gold);color:#3a2700;padding:13px 22px;border-radius:40px;
+    font-weight:800;font-size:16px;letter-spacing:.04em;opacity:0;pointer-events:none;
+    transition:transform .3s cubic-bezier(.2,.9,.3,1.3),opacity .3s;z-index:50;
+    box-shadow:0 10px 30px rgba(0,0,0,.4);}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+  /* log + footer */
+  .foot{margin-top:22px;border-top:1px solid var(--slate-line);padding-top:14px;}
+  .foot h2{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-soft);
+    font-weight:600;margin:0 0 8px;}
+  .log{list-style:none;margin:0;padding:0;font-size:13px;}
+  .log li{display:flex;justify-content:space-between;gap:10px;padding:7px 0;
+    border-bottom:1px dashed var(--slate-line);color:var(--text-soft);}
+  .log li .a{color:var(--gold);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap;}
+  .log .empty{color:#6f8c8a;font-style:italic;border:none;}
+  .reset{margin-top:16px;background:none;border:1px solid var(--slate-line);
+    color:var(--text-soft);border-radius:10px;padding:9px 14px;font-size:12px;
+    font-family:inherit;cursor:pointer;}
+  .reset:active{transform:translateY(1px);}
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Москва → Гамбург</div>
+    <h1>Кубышка
+      <span class="sub">Пресекла импульс — закинула рубли — оплатила будущий прикол.</span>
+    </h1>
+  </header>
+
+  <div class="bank">
+    <div class="label">В копилке</div>
+    <div class="amount"><span id="bankRub">0</span> <span class="cur">₽</span></div>
+    <div class="eur" id="bankEur">≈ 0 €</div>
+    <div class="meta">Закрыто клеток: <b id="claimedCount">1</b> из 25 · доступно сейчас: <b id="affordCount">0</b></div>
+  </div>
+
+  <div class="add">
+    <input id="amt" type="number" inputmode="numeric" placeholder="сумма ₽">
+    <input id="note" type="text" placeholder="от чего удержалась (необязательно)">
+    <button id="addBtn">Закинуть</button>
+  </div>
+  <div class="hint">Жми на клетку, чтобы оплатить прикол (спишется из копилки). Жми ещё раз — вернуть. Зелёные — даром.</div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="foot">
+    <h2>Что капало в копилку</h2>
+    <ul class="log" id="log"></ul>
+    <button class="reset" id="resetBtn">Сбросить всё</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+"use strict";
+var RATE = 90; // 1 € = 90 ₽
+
+// ---- storage with offline fallback ----
+var mem = {};
+var store = {
+  get: function(k){ try{ return localStorage.getItem(k); }catch(e){ return (k in mem)?mem[k]:null; } },
+  set: function(k,v){ try{ localStorage.setItem(k,v); }catch(e){ mem[k]=v; } }
+};
+
+// ---- the 24 treats; center free space inserted at index 12 ----
+var TREATS = [
+  {n:"Кофе на Isemarkt", r:360},
+  {n:"Planten un Blomen · свето-шоу", r:0, free:true},
+  {n:"Музей Kunsthalle, студ.", r:720},
+  {n:"Поезд в Копенгаген, в один конец", r:3150},
+  {n:"Эльбский пляж Övelgönne", r:0, free:true},
+  {n:"Марципан в Любеке", r:450},
+  {n:"Эльбфилармония, студ. Restkarte", r:1080},
+  {n:"Любек регионалкой", r:0, free:true},
+  {n:"Концерт на Reeperbahn, студ.", r:1800},
+  {n:"Bücherhallen · читать", r:0, free:true},
+  {n:"Обед в Mensa", r:360},
+  {n:"Бремен регионалкой", r:0, free:true},
+  {n:"Лоукост по Европе, туда-обратно", r:9000},
+  {n:"Бассейн, студ.", r:540},
+  {n:"Опера, студ. Restticket", r:1080},
+  {n:"Воскресный Fischmarkt", r:0, free:true},
+  {n:"Хороший ужин", r:2700},
+  {n:"Альстер · бег и SUP", r:0, free:true},
+  {n:"Кино, студ.", r:810},
+  {n:"Выходные в Берлине", r:18000},
+  {n:"Концерт в Эльбфилармонии, хор. место", r:7200},
+  {n:"Выходные в Копенгагене", r:22500},
+  {n:"Карривурст на St. Pauli", r:450},
+  {n:"Неделя по Шенгену", r:54000}
+];
+// build 25 cells, center (12) = free space, pre-claimed
+var CELLS = [];
+for (var i=0;i<TREATS.length;i++){
+  if (i===12) CELLS.push({n:"FREE", r:0, free:true, center:true});
+  CELLS.push(TREATS[i]);
+}
+// CELLS now has 25 entries, center at index 12
+
+// winning lines on 5x5
+var LINES = [];
+for (var rIdx=0;rIdx<5;rIdx++) LINES.push([rIdx*5,rIdx*5+1,rIdx*5+2,rIdx*5+3,rIdx*5+4]);
+for (var c=0;c<5;c++) LINES.push([c,c+5,c+10,c+15,c+20]);
+LINES.push([0,6,12,18,24]);
+LINES.push([4,8,12,16,20]);
+
+// ---- state ----
+var state;
+function load(){
+  var raw = store.get("kubyshka_v1");
+  if (raw){ try{ state = JSON.parse(raw); }catch(e){ state=null; } }
+  if (!state || !state.claimed || state.claimed.length!==25){
+    state = { bank:0, claimed:new Array(25).fill(false), log:[], wonLines:[] };
+    state.claimed[12] = true; // free centre marked
+  }
+  if (!state.wonLines) state.wonLines = [];
+}
+function save(){ store.set("kubyshka_v1", JSON.stringify(state)); }
+
+// ---- format ----
+function fmt(n){ return Math.round(n).toLocaleString("ru-RU"); }
+
+// ---- render ----
+var grid = document.getElementById("grid");
+function affordable(idx){
+  var cell = CELLS[idx];
+  if (cell.free) return true;
+  return state.bank >= cell.r;
+}
+function render(){
+  // bank
+  document.getElementById("bankRub").textContent = fmt(state.bank);
+  document.getElementById("bankEur").textContent = "≈ " + fmt(state.bank/RATE) + " €";
+  var claimed = state.claimed.filter(Boolean).length;
+  document.getElementById("claimedCount").textContent = claimed;
+  var aff = 0;
+  for (var i=0;i<25;i++){ if(!state.claimed[i] && affordable(i)) aff++; }
+  document.getElementById("affordCount").textContent = aff;
+
+  // grid
+  grid.innerHTML = "";
+  for (var k=0;k<25;k++){
+    (function(idx){
+      var cell = CELLS[idx];
+      var el = document.createElement("button");
+      el.className = "cell";
+      if (cell.free) el.classList.add("free");
+      if (cell.center) el.classList.add("center");
+      if (state.claimed[idx]) el.classList.add("claimed");
+      else if (!affordable(idx)) el.classList.add("locked");
+
+      if (cell.center){
+        el.innerHTML = '<span class="check">✓</span>'+
+                       '<span class="star">★</span>'+
+                       '<span class="nm">даровое поле</span>';
+      } else {
+        var price = cell.free ? "даром" : fmt(cell.r)+" ₽";
+        el.innerHTML = '<span class="check">✓</span>'+
+                       '<span class="nm">'+cell.n+'</span>'+
+                       '<span class="pr">'+price+'</span>';
+      }
+      el.addEventListener("click", function(){ toggle(idx); });
+      grid.appendChild(el);
+    })(k);
+  }
+  renderLog();
+}
+function renderLog(){
+  var ul = document.getElementById("log");
+  ul.innerHTML = "";
+  if (!state.log.length){
+    var li = document.createElement("li");
+    li.className = "empty";
+    li.textContent = "Пока пусто. Первый отказ — первая строка.";
+    ul.appendChild(li);
+    return;
+  }
+  for (var i=state.log.length-1; i>=0 && i>state.log.length-13; i--){
+    var e = state.log[i];
+    var li2 = document.createElement("li");
+    var label = e.note ? e.note : "импульс пресечён";
+    var sign = e.amt>=0 ? "+" : "−";
+    li2.innerHTML = '<span>'+label+'</span><span class="a">'+sign+fmt(Math.abs(e.amt))+' ₽</span>';
+    ul.appendChild(li2);
+  }
+}
+
+// ---- actions ----
+function addToBank(){
+  var amtEl = document.getElementById("amt");
+  var noteEl = document.getElementById("note");
+  var v = parseFloat(amtEl.value);
+  if (!v || v<=0){ amtEl.focus(); return; }
+  state.bank += v;
+  state.log.push({ amt:v, note:noteEl.value.trim(), t:Date.now() });
+  amtEl.value=""; noteEl.value="";
+  save(); render();
+}
+function toggle(idx){
+  var cell = CELLS[idx];
+  if (cell.center) return; // free centre stays
+  if (state.claimed[idx]){
+    // un-claim → refund
+    state.claimed[idx] = false;
+    if (!cell.free){
+      state.bank += cell.r;
+      state.log.push({ amt:cell.r, note:"возврат: "+cell.n, t:Date.now() });
+    }
+    save(); render();
+    return;
+  }
+  if (!affordable(idx)){
+    var need = cell.r - state.bank;
+    flash("Не хватает "+fmt(need)+" ₽");
+    return;
+  }
+  state.claimed[idx] = true;
+  if (!cell.free){
+    state.bank -= cell.r;
+    state.log.push({ amt:-cell.r, note:"оплачено: "+cell.n, t:Date.now() });
+  }
+  save();
+  checkBingo();
+  render();
+}
+function checkBingo(){
+  for (var i=0;i<LINES.length;i++){
+    var line = LINES[i];
+    var full = line.every(function(ix){ return state.claimed[ix]; });
+    if (full && state.wonLines.indexOf(i)===-1){
+      state.wonLines.push(i);
+      flash("БИНГО! Линия закрыта 🎉");
+    }
+  }
+}
+var toastTimer;
+function flash(msg){
+  var t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.classList.remove("show"); }, 2200);
+}
+
+document.getElementById("addBtn").addEventListener("click", addToBank);
+document.getElementById("amt").addEventListener("keydown", function(e){ if(e.key==="Enter") addToBank(); });
+document.getElementById("note").addEventListener("keydown", function(e){ if(e.key==="Enter") addToBank(); });
+document.getElementById("resetBtn").addEventListener("click", function(){
+  if (confirm("Сбросить копилку, лог и все клетки?")){
+    try{ localStorage.removeItem("kubyshka_v1"); }catch(e){ delete mem["kubyshka_v1"]; }
+    state=null; load(); render();
+  }
+});
+
+load();
+render();
+</script>
+</body>
+</html>
