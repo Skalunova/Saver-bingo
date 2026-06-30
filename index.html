@@ -34,10 +34,8 @@
   .eyebrow{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent);font-weight:700;margin-bottom:8px;}
   h1{font-weight:700;font-size:32px;line-height:1.04;margin:0;letter-spacing:-.02em;}
   h1 .sub{display:block;font-size:14px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:8px;}
-
   .glass{background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
     border:1px solid var(--stroke);box-shadow:0 8px 30px rgba(10,12,24,.30), inset 0 1px 0 rgba(255,255,255,.10);}
-
   .bank{margin:18px 0 14px;border-radius:22px;padding:20px;position:relative;overflow:hidden;}
   .bank .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
   .bank .amount{font-size:44px;font-weight:700;letter-spacing:-.03em;margin:4px 0 0;}
@@ -45,7 +43,6 @@
   .bank .eur{font-size:13px;color:var(--muted);margin-top:2px;}
   .bank .meta{font-size:12px;color:var(--muted);margin-top:12px;}
   .bank .meta b{color:var(--accent);font-weight:700;}
-
   .add{display:flex;gap:8px;margin:0 0 6px;flex-wrap:wrap;}
   .field{font-size:16px;color:var(--text);background:var(--glass-2);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
     border:1px solid var(--stroke-soft);border-radius:14px;padding:13px;font-family:inherit;}
@@ -57,11 +54,9 @@
     box-shadow:0 6px 18px rgba(180,134,171,.35);}
   .btn:active{transform:translateY(1px);}
   .hint{font-size:12px;color:var(--muted);margin:4px 4px 14px;}
-
   .section-head{display:flex;align-items:baseline;justify-content:space-between;margin:22px 4px 10px;}
   .section-head h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0;}
   .progress{font-size:12px;color:var(--muted);}.progress b{color:var(--accent);}
-
   .list{display:flex;flex-direction:column;gap:9px;}
   .row{display:flex;align-items:center;gap:12px;border-radius:16px;padding:13px 14px;
     background:var(--glass);-webkit-backdrop-filter:blur(12px) saturate(140%);backdrop-filter:blur(12px) saturate(140%);
@@ -83,14 +78,12 @@
   .row.claimed{background:linear-gradient(120deg,rgba(205,166,198,.30),rgba(205,166,198,.14));border-color:var(--accent-deep);}
   .row.claimed .nm{color:#fbeef8;}
   .row.claimed .check{background:var(--accent);border-color:var(--accent);color:var(--on-accent);box-shadow:0 0 14px rgba(205,166,198,.5);}
-
   .addtreat{margin:0 0 4px;}
   .addtreat summary{list-style:none;cursor:pointer;font-size:13px;color:var(--accent);font-weight:700;padding:6px 4px 10px;}
   .addtreat summary::-webkit-details-marker{display:none;}
   .addtreat .fields{display:flex;gap:8px;margin:0 0 6px;flex-wrap:wrap;}
   #tname{flex:1;min-width:150px;}
   #tprice{width:120px;font-variant-numeric:tabular-nums;}
-
   .foot{margin-top:24px;border-radius:20px;padding:18px;}
   .foot h2{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 4px;}
   .foot .note{font-size:11px;color:#7b84a4;margin:0 0 10px;}
@@ -99,7 +92,6 @@
   .log li .a{color:var(--accent);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;}
   .log .empty{color:#7b84a4;font-style:italic;border:none;cursor:default;}
   .reset{margin-top:16px;background:rgba(255,255,255,.05);border:1px solid var(--stroke-soft);color:var(--muted);border-radius:12px;padding:10px 15px;font-size:12px;font-family:inherit;cursor:pointer;}
-
   #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(40px);
     background:rgba(205,166,198,.92);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
     color:var(--on-accent);padding:13px 22px;border-radius:40px;font-weight:700;font-size:15px;
@@ -115,24 +107,20 @@
     <div class="eyebrow">Москва → Гамбург</div>
     <h1>Кубышка<span class="sub">Пресекла импульс — закинула рубли — оплатила будущий прикол.</span></h1>
   </header>
-
   <div class="bank glass">
     <div class="label">В копилке</div>
     <div class="amount"><span id="bankRub">0</span> <span class="cur">₽</span></div>
     <div class="eur" id="bankEur">≈ 0 €</div>
     <div class="meta">Закрыто: <b id="claimedCount">0</b> из <b id="totalCount">0</b> · по карману сейчас: <b id="affordCount">0</b></div>
   </div>
-
   <div class="add">
     <input id="amt" class="field" type="number" inputmode="numeric" placeholder="сумма ₽">
     <input id="note" class="field" type="text" placeholder="от чего удержалась">
     <button class="btn" id="addBtn">Закинуть</button>
   </div>
   <div class="hint">В журнал внизу попадают только пополнения. Кружок справа — отметить пункт оплаченным (спишется из копилки), тап ещё раз — вернуть. Бесплатные радости открываются после оплаты перелёта.</div>
-
   <div class="section-head"><h2>Сначала — долететь и устроиться</h2></div>
   <div class="list" id="listFunc"></div>
-
   <div class="section-head"><h2>Приколы</h2><span class="progress"><b id="progA">0</b>/<b id="progB">0</b></span></div>
   <details class="addtreat">
     <summary>+ добавить свой прикол</summary>
@@ -143,7 +131,6 @@
     </div>
   </details>
   <div class="list" id="listFun"></div>
-
   <div class="foot glass">
     <h2>Что капало в копилку</h2>
     <p class="note">Тап по строке — удалить пополнение (сумма вернётся из копилки).</p>
@@ -156,51 +143,6 @@
 <script>
 "use strict";
 var RATE=90, FLIGHT_ID="fly";
-
-/* ---------- icon + manifest (single-file, offline) ---------- */
-var ICON_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">'+
-'<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#262d47"/><stop offset="1" stop-color="#14182a"/></linearGradient>'+
-'<linearGradient id="pot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dab4d3"/><stop offset="1" stop-color="#b486ab"/></linearGradient></defs>'+
-'<rect width="512" height="512" fill="url(#bg)"/>'+
-'<circle cx="150" cy="120" r="160" fill="#9fb4e6" opacity="0.18"/><circle cx="400" cy="180" r="150" fill="#cda6c6" opacity="0.18"/>'+
-'<path d="M156 252 q-18 60 14 120 q30 56 86 56 q56 0 86 -56 q32 -60 14 -120 q-10 -34 -50 -46 l0 -8 q0 -16 -16 -16 l-68 0 q-16 0 -16 16 l0 8 q-40 12 -50 46 z" fill="url(#pot)"/>'+
-'<rect x="196" y="206" width="120" height="26" rx="13" fill="#caa0c2"/>'+
-'<rect x="236" y="252" width="40" height="12" rx="6" fill="#2c1f2c" opacity="0.5"/>'+
-'<circle cx="256" cy="184" r="36" fill="#9fb4e6"/>'+
-'<text x="256" y="200" font-family="Roboto, sans-serif" font-size="46" font-weight="700" fill="#1a1f33" text-anchor="middle">&#8381;</text>'+
-'</svg>';
-(function(){
-  var iconUrl='data:image/svg+xml,'+encodeURIComponent(ICON_SVG);
-  var mani={name:"Кубышка",short_name:"Кубышка",start_url:".",display:"standalone",
-    background_color:"#1a1f33",theme_color:"#1a1f33",
-    icons:[{src:iconUrl,sizes:"any",type:"image/svg+xml",purpose:"any maskable"}]};
-  document.getElementById("manifest").href='data:application/json,'+encodeURIComponent(JSON.stringify(mani));
-  var at=document.createElement("link");at.rel="apple-touch-icon";at.href=iconUrl;document.head.appendChild(at);
-  var fav=document.createElement("link");fav.rel="icon";fav.type="image/svg+xml";fav.href=iconUrl;document.head.appendChild(fav);
-})();
-
-/* ---------- sound (Web Audio) + vibration ---------- */
-var actx=null;
-function audioReady(){
-  try{ if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==="suspended")actx.resume(); }catch(e){actx=null;}
-}
-function tone(freq,start,dur,type,vol){
-  if(!actx)return;
-  var o=actx.createOscillator(),g=actx.createGain();
-  o.type=type||"sine";o.frequency.value=freq;o.connect(g);g.connect(actx.destination);
-  var t0=actx.currentTime+start;
-  g.gain.setValueAtTime(0.0001,t0);
-  g.gain.exponentialRampToValueAtTime(vol||0.18,t0+0.012);
-  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
-  o.start(t0);o.stop(t0+dur+0.03);
-}
-function sCoin(){audioReady();tone(880,0,0.12,"triangle",0.22);tone(1320,0.05,0.14,"triangle",0.16);}
-function sReward(){audioReady();[523,659,784].forEach(function(f,i){tone(f,i*0.07,0.20,"sine",0.18);});}
-function sFanfare(){audioReady();[523,659,784,1047].forEach(function(f,i){tone(f,i*0.10,0.24,"triangle",0.18);});}
-function sBuzz(){audioReady();tone(140,0,0.20,"sawtooth",0.16);}
-function sClick(){audioReady();tone(320,0,0.05,"square",0.10);}
-function vibe(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
-document.addEventListener("pointerdown",audioReady,{once:true});
 
 /* ---------- storage ---------- */
 var mem={};
@@ -252,7 +194,7 @@ function funcTreats(){return FUNC.slice().sort(function(a,b){return a.r-b.r;});}
 function funTreats(){
   var a=BUILTIN.concat(state.custom);
   a.sort(function(x,y){
-    var gx=gated(x)?1:0, gy=gated(y)?1:0;   /* locked items sink to bottom */
+    var gx=gated(x)?1:0, gy=gated(y)?1:0;
     if(gx!==gy)return gx-gy;
     return x.r-y.r;
   });
@@ -261,6 +203,28 @@ function funTreats(){
 function isClaimed(id){return state.claimed.indexOf(id)>-1;}
 function gated(t){return t.gate && !isClaimed(t.gate);}
 function affordable(t){return t.r===0||state.bank>=t.r;}
+
+/* ---------- effects (sound + vibro), всё в защите ---------- */
+var actx=null;
+function audioReady(){try{if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)();if(actx.state==="suspended")actx.resume();}catch(e){actx=null;}}
+function tone(freq,start,dur,type,vol){try{
+  if(!actx)return;
+  var o=actx.createOscillator(),g=actx.createGain();
+  o.type=type||"sine";o.frequency.value=freq;o.connect(g);g.connect(actx.destination);
+  var t0=actx.currentTime+start;
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(vol||0.18,t0+0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  o.start(t0);o.stop(t0+dur+0.03);
+}catch(e){}}
+function sCoin(){audioReady();tone(880,0,0.12,"triangle",0.22);tone(1320,0.05,0.14,"triangle",0.16);}
+function sReward(){audioReady();[523,659,784].forEach(function(f,i){tone(f,i*0.07,0.20,"sine",0.18);});}
+function sFanfare(){audioReady();[523,659,784,1047].forEach(function(f,i){tone(f,i*0.10,0.24,"triangle",0.18);});}
+function sBuzz(){audioReady();tone(140,0,0.20,"sawtooth",0.16);}
+function sClick(){audioReady();tone(320,0,0.05,"square",0.10);}
+function vibe(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+
+/* ---------- render ---------- */
 function render(){
   var funcs=funcTreats(), funs=funTreats(), all=funcs.concat(funs);
   document.getElementById("bankRub").textContent=fmt(state.bank);
@@ -311,6 +275,8 @@ function renderLog(){
 }
 function flash(msg){var t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");
   clearTimeout(flash._t);flash._t=setTimeout(function(){t.classList.remove("show");},2000);}
+
+/* ---------- actions ---------- */
 function addToBank(){
   var a=document.getElementById("amt"),no=document.getElementById("note");
   var v=parseFloat(a.value);if(!v||v<=0){a.focus();return;}
@@ -340,4 +306,29 @@ function addTreat(){
   state.custom.push({id:"c"+Date.now(),n:name,r:price});nm.value="";pr.value="";
   save();render();flash("Добавлено: "+name);sClick();vibe(10);
 }
-function removeTreat(id){var t=state.custom
+function removeTreat(id){var t=state.custom.filter(function(x){return x.id===id;})[0];if(!t)return;
+  if(confirm('Удалить прикол «'+t.n+'»?')){state.custom=state.custom.filter(function(x){return x.id!==id;});
+    if(isClaimed(id)){state.claimed.splice(state.claimed.indexOf(id),1);state.bank+=t.r;}save();render();sClick();vibe(8);}}
+
+/* ====== СПИСОК РИСУЕТСЯ ПЕРВЫМ ====== */
+load();
+render();
+document.getElementById("addBtn").addEventListener("click",addToBank);
+document.getElementById("amt").addEventListener("keydown",function(e){if(e.key==="Enter")addToBank();});
+document.getElementById("note").addEventListener("keydown",function(e){if(e.key==="Enter")addToBank();});
+document.getElementById("treatBtn").addEventListener("click",addTreat);
+document.getElementById("resetBtn").addEventListener("click",function(){
+  if(confirm("Сбросить копилку, журнал, отметки и свои приколы?")){store.del("kubyshka_v2");state=null;load();render();sClick();}});
+
+/* ====== иконка/манифест/аудио — ПОСЛЕ списка, в полной изоляции ====== */
+try{
+  document.addEventListener("pointerdown",audioReady,{once:true});
+}catch(e){}
+try{
+  var ICON_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">'+
+  '<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#262d47"/><stop offset="1" stop-color="#14182a"/></linearGradient>'+
+  '<linearGradient id="pot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dab4d3"/><stop offset="1" stop-color="#b486ab"/></linearGradient></defs>'+
+  '<rect width="512" height="512" fill="url(#bg)"/>'+
+  '<circle cx="150" cy="120" r="160" fill="#9fb4e6" opacity="0.18"/><circle cx="400" cy="180" r="150" fill="#cda6c6" opacity="0.18"/>'+
+  '<path d="M156 252 q-18 60 14 120 q30 56 86 56 q56 0 86 -56 q32 -60 14 -120 q-10 -34 -50 -46 l0 -8 q0 -16 -16 -16 l-68 0 q-16 0 -16 16 l0 8 q-40 12 -50 46 z" fill="url(#pot)"/>'+
+  '<rect x="196" y="206" wi
