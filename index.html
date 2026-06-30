@@ -7,7 +7,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Кубышка">
-<link rel="manifest" href='data:application/json,{"name":"Кубышка","short_name":"Кубышка","start_url":".","display":"standalone","background_color":"%231a1f33","theme_color":"%231a1f33","icons":[]}'>
+<link id="manifest" rel="manifest">
 <title>Кубышка</title>
 <style>
   :root{
@@ -35,13 +35,8 @@
   h1{font-weight:700;font-size:32px;line-height:1.04;margin:0;letter-spacing:-.02em;}
   h1 .sub{display:block;font-size:14px;font-weight:400;color:var(--muted);letter-spacing:0;margin-top:8px;}
 
-  .glass{
-    background:var(--glass);
-    -webkit-backdrop-filter:blur(18px) saturate(150%);
-    backdrop-filter:blur(18px) saturate(150%);
-    border:1px solid var(--stroke);
-    box-shadow:0 8px 30px rgba(10,12,24,.30), inset 0 1px 0 rgba(255,255,255,.10);
-  }
+  .glass{background:var(--glass);-webkit-backdrop-filter:blur(18px) saturate(150%);backdrop-filter:blur(18px) saturate(150%);
+    border:1px solid var(--stroke);box-shadow:0 8px 30px rgba(10,12,24,.30), inset 0 1px 0 rgba(255,255,255,.10);}
 
   .bank{margin:18px 0 14px;border-radius:22px;padding:20px;position:relative;overflow:hidden;}
   .bank .label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
@@ -52,8 +47,7 @@
   .bank .meta b{color:var(--accent);font-weight:700;}
 
   .add{display:flex;gap:8px;margin:0 0 6px;flex-wrap:wrap;}
-  .field{font-size:16px;color:var(--text);background:var(--glass-2);
-    -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  .field{font-size:16px;color:var(--text);background:var(--glass-2);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
     border:1px solid var(--stroke-soft);border-radius:14px;padding:13px;font-family:inherit;}
   .field::placeholder{color:#7b84a4;}
   #amt{width:120px;font-variant-numeric:tabular-nums;}
@@ -84,18 +78,16 @@
   .check{flex:none;width:36px;height:36px;border-radius:50%;border:2px solid var(--stroke);background:rgba(255,255,255,.05);
     cursor:pointer;display:flex;align-items:center;justify-content:center;color:transparent;font-size:17px;font-weight:800;transition:all .18s ease;}
   .check:active{transform:scale(.9);}
-  .row.poor{opacity:.5;}
-  .row.poor .check{border-style:dashed;}
-  .row.locked-gate{opacity:.6;}
-  .row.locked-gate .check{border:none;color:var(--lock);background:transparent;}
+  .row.poor{opacity:.5;}.row.poor .check{border-style:dashed;}
+  .row.locked-gate{opacity:.6;}.row.locked-gate .check{border:none;color:var(--lock);background:transparent;}
   .row.claimed{background:linear-gradient(120deg,rgba(205,166,198,.30),rgba(205,166,198,.14));border-color:var(--accent-deep);}
   .row.claimed .nm{color:#fbeef8;}
   .row.claimed .check{background:var(--accent);border-color:var(--accent);color:var(--on-accent);box-shadow:0 0 14px rgba(205,166,198,.5);}
 
-  .addtreat{margin-top:12px;}
-  .addtreat summary{list-style:none;cursor:pointer;font-size:13px;color:var(--accent);font-weight:700;padding:8px 4px;}
+  .addtreat{margin:0 0 4px;}
+  .addtreat summary{list-style:none;cursor:pointer;font-size:13px;color:var(--accent);font-weight:700;padding:6px 4px 10px;}
   .addtreat summary::-webkit-details-marker{display:none;}
-  .addtreat .fields{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+  .addtreat .fields{display:flex;gap:8px;margin:0 0 6px;flex-wrap:wrap;}
   #tname{flex:1;min-width:150px;}
   #tprice{width:120px;font-variant-numeric:tabular-nums;}
 
@@ -142,8 +134,6 @@
   <div class="list" id="listFunc"></div>
 
   <div class="section-head"><h2>Приколы</h2><span class="progress"><b id="progA">0</b>/<b id="progB">0</b></span></div>
-  <div class="list" id="listFun"></div>
-
   <details class="addtreat">
     <summary>+ добавить свой прикол</summary>
     <div class="fields">
@@ -152,6 +142,7 @@
       <button class="btn" id="treatBtn">Добавить</button>
     </div>
   </details>
+  <div class="list" id="listFun"></div>
 
   <div class="foot glass">
     <h2>Что капало в копилку</h2>
@@ -165,6 +156,53 @@
 <script>
 "use strict";
 var RATE=90, FLIGHT_ID="fly";
+
+/* ---------- icon + manifest (single-file, offline) ---------- */
+var ICON_SVG='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">'+
+'<defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#262d47"/><stop offset="1" stop-color="#14182a"/></linearGradient>'+
+'<linearGradient id="pot" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dab4d3"/><stop offset="1" stop-color="#b486ab"/></linearGradient></defs>'+
+'<rect width="512" height="512" fill="url(#bg)"/>'+
+'<circle cx="150" cy="120" r="160" fill="#9fb4e6" opacity="0.18"/><circle cx="400" cy="180" r="150" fill="#cda6c6" opacity="0.18"/>'+
+'<path d="M156 252 q-18 60 14 120 q30 56 86 56 q56 0 86 -56 q32 -60 14 -120 q-10 -34 -50 -46 l0 -8 q0 -16 -16 -16 l-68 0 q-16 0 -16 16 l0 8 q-40 12 -50 46 z" fill="url(#pot)"/>'+
+'<rect x="196" y="206" width="120" height="26" rx="13" fill="#caa0c2"/>'+
+'<rect x="236" y="252" width="40" height="12" rx="6" fill="#2c1f2c" opacity="0.5"/>'+
+'<circle cx="256" cy="184" r="36" fill="#9fb4e6"/>'+
+'<text x="256" y="200" font-family="Roboto, sans-serif" font-size="46" font-weight="700" fill="#1a1f33" text-anchor="middle">&#8381;</text>'+
+'</svg>';
+(function(){
+  var iconUrl='data:image/svg+xml,'+encodeURIComponent(ICON_SVG);
+  var mani={name:"Кубышка",short_name:"Кубышка",start_url:".",display:"standalone",
+    background_color:"#1a1f33",theme_color:"#1a1f33",
+    icons:[{src:iconUrl,sizes:"any",type:"image/svg+xml",purpose:"any maskable"}]};
+  document.getElementById("manifest").href='data:application/json,'+encodeURIComponent(JSON.stringify(mani));
+  var at=document.createElement("link");at.rel="apple-touch-icon";at.href=iconUrl;document.head.appendChild(at);
+  var fav=document.createElement("link");fav.rel="icon";fav.type="image/svg+xml";fav.href=iconUrl;document.head.appendChild(fav);
+})();
+
+/* ---------- sound (Web Audio) + vibration ---------- */
+var actx=null;
+function audioReady(){
+  try{ if(!actx)actx=new (window.AudioContext||window.webkitAudioContext)(); if(actx.state==="suspended")actx.resume(); }catch(e){actx=null;}
+}
+function tone(freq,start,dur,type,vol){
+  if(!actx)return;
+  var o=actx.createOscillator(),g=actx.createGain();
+  o.type=type||"sine";o.frequency.value=freq;o.connect(g);g.connect(actx.destination);
+  var t0=actx.currentTime+start;
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.exponentialRampToValueAtTime(vol||0.18,t0+0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  o.start(t0);o.stop(t0+dur+0.03);
+}
+function sCoin(){audioReady();tone(880,0,0.12,"triangle",0.22);tone(1320,0.05,0.14,"triangle",0.16);}
+function sReward(){audioReady();[523,659,784].forEach(function(f,i){tone(f,i*0.07,0.20,"sine",0.18);});}
+function sFanfare(){audioReady();[523,659,784,1047].forEach(function(f,i){tone(f,i*0.10,0.24,"triangle",0.18);});}
+function sBuzz(){audioReady();tone(140,0,0.20,"sawtooth",0.16);}
+function sClick(){audioReady();tone(320,0,0.05,"square",0.10);}
+function vibe(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+document.addEventListener("pointerdown",audioReady,{once:true});
+
+/* ---------- storage ---------- */
 var mem={};
 var store={
   get:function(k){try{return localStorage.getItem(k);}catch(e){return (k in mem)?mem[k]:null;}},
@@ -211,7 +249,15 @@ function load(){
 function save(){store.set("kubyshka_v2",JSON.stringify(state));}
 function fmt(n){return Math.round(n).toLocaleString("ru-RU");}
 function funcTreats(){return FUNC.slice().sort(function(a,b){return a.r-b.r;});}
-function funTreats(){var a=BUILTIN.concat(state.custom);a.sort(function(x,y){return x.r-y.r;});return a;}
+function funTreats(){
+  var a=BUILTIN.concat(state.custom);
+  a.sort(function(x,y){
+    var gx=gated(x)?1:0, gy=gated(y)?1:0;   /* locked items sink to bottom */
+    if(gx!==gy)return gx-gy;
+    return x.r-y.r;
+  });
+  return a;
+}
 function isClaimed(id){return state.claimed.indexOf(id)>-1;}
 function gated(t){return t.gate && !isClaimed(t.gate);}
 function affordable(t){return t.r===0||state.bank>=t.r;}
@@ -268,40 +314,30 @@ function flash(msg){var t=document.getElementById("toast");t.textContent=msg;t.c
 function addToBank(){
   var a=document.getElementById("amt"),no=document.getElementById("note");
   var v=parseFloat(a.value);if(!v||v<=0){a.focus();return;}
-  state.bank+=v;state.log.push({amt:v,note:no.value.trim(),t:Date.now()});a.value="";no.value="";save();render();
+  state.bank+=v;state.log.push({amt:v,note:no.value.trim(),t:Date.now()});a.value="";no.value="";
+  save();render();sCoin();vibe(15);
 }
 function delDeposit(idx){var e=state.log[idx];if(!e)return;
   if(confirm('Удалить пополнение «'+(e.note||"импульс пресечён")+'» на '+fmt(e.amt)+' ₽? Сумма вернётся из копилки.')){
-    state.bank-=e.amt;state.log.splice(idx,1);save();render();}}
+    state.bank-=e.amt;state.log.splice(idx,1);save();render();sClick();vibe(8);}}
 function findTreat(id){var all=FUNC.concat(BUILTIN).concat(state.custom);
   for(var i=0;i<all.length;i++)if(all[i].id===id)return all[i];return null;}
 function toggle(t){
   if(isClaimed(t.id)){
     state.claimed.splice(state.claimed.indexOf(t.id),1);state.bank+=t.r;
     if(t.id===FLIGHT_ID){state.claimed=state.claimed.filter(function(id){var x=findTreat(id);return !(x&&x.gate===FLIGHT_ID);});}
-    save();render();return;}
-  if(gated(t)){flash("Сначала оплати перелёт — он открывает бесплатные радости Гамбурга");return;}
-  if(!affordable(t)){flash("Не хватает "+fmt(t.r-state.bank)+" ₽");return;}
+    save();render();sClick();vibe(8);return;}
+  if(gated(t)){flash("Сначала оплати перелёт — он открывает бесплатные радости Гамбурга");sBuzz();vibe(40);return;}
+  if(!affordable(t)){flash("Не хватает "+fmt(t.r-state.bank)+" ₽");sBuzz();vibe(40);return;}
   state.claimed.push(t.id);state.bank-=t.r;save();render();
-  if(t.id===FLIGHT_ID)flash("Ты в Гамбурге! Бесплатные радости открыты ✨");
-  else flash(t.r===0?"Отмечено: "+t.n:"Оплачено: "+t.n);
+  if(t.id===FLIGHT_ID){flash("Ты в Гамбурге! Бесплатные радости открыты ✨");sFanfare();vibe([20,40,20,40,60]);}
+  else{flash(t.r===0?"Отмечено: "+t.n:"Оплачено: "+t.n);sReward();vibe([10,30,15]);}
 }
 function addTreat(){
   var nm=document.getElementById("tname"),pr=document.getElementById("tprice");
   var name=nm.value.trim();var price=parseFloat(pr.value);if(!name){nm.focus();return;}
   if(isNaN(price)||price<0)price=0;
-  state.custom.push({id:"c"+Date.now(),n:name,r:price});nm.value="";pr.value="";save();render();flash("Добавлено: "+name);
+  state.custom.push({id:"c"+Date.now(),n:name,r:price});nm.value="";pr.value="";
+  save();render();flash("Добавлено: "+name);sClick();vibe(10);
 }
-function removeTreat(id){var t=state.custom.filter(function(x){return x.id===id;})[0];if(!t)return;
-  if(confirm('Удалить прикол «'+t.n+'»?')){state.custom=state.custom.filter(function(x){return x.id!==id;});
-    if(isClaimed(id)){state.claimed.splice(state.claimed.indexOf(id),1);state.bank+=t.r;}save();render();}}
-document.getElementById("addBtn").addEventListener("click",addToBank);
-document.getElementById("amt").addEventListener("keydown",function(e){if(e.key==="Enter")addToBank();});
-document.getElementById("note").addEventListener("keydown",function(e){if(e.key==="Enter")addToBank();});
-document.getElementById("treatBtn").addEventListener("click",addTreat);
-document.getElementById("resetBtn").addEventListener("click",function(){
-  if(confirm("Сбросить копилку, журнал, отметки и свои приколы?")){store.del("kubyshka_v2");state=null;load();render();}});
-load();render();
-</script>
-</body>
-</html>
+function removeTreat(id){var t=state.custom
